@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +19,7 @@ import br.com.sparrow.backend.repository.UsuarioRepository;
 import br.com.sparrow.backend.util.Code;
 
 @RestController
+@CrossOrigin(origins="*",allowCredentials="true",allowedHeaders="true",exposedHeaders="true")
 public class HomeController {
 	
 	@Autowired
