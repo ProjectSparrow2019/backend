@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.sparrow.backend.model.Base;
 import br.com.sparrow.backend.model.Produto;
 import br.com.sparrow.backend.model.Usuario;
+import br.com.sparrow.backend.repository.BaseRepository;
 import br.com.sparrow.backend.repository.ProdutoRepository;
 import br.com.sparrow.backend.repository.UsuarioRepository;
 import br.com.sparrow.backend.util.Code;
@@ -32,10 +34,19 @@ public class HomeController {
 	private UsuarioRepository usuarioRepository;
 	
 	@Autowired
+	private BaseRepository baseRepository;
+	
+	@Autowired
 	private Code code;
 	
 	@Value("${fila.nome}")
 	private String fila;
+	
+	
+	@PostMapping("/fazerFeedback")
+	public Base fazerFeedback(@RequestBody Produto produto) {
+		return baseRepository.save(new Base(produto));
+	}
 
 	@GetMapping("/verProdutosClassificados")
 	public List<Produto> verProdutosClassificados() {
@@ -43,8 +54,15 @@ public class HomeController {
 	}
 	
 	@PostMapping("/buscarNovosProdutos")
-	public void buscarNovosProdutos(@RequestParam String nomeProduto) {
-		jmsTemplate.convertAndSend(fila,nomeProduto);
+	public String buscarNovosProdutos(@RequestParam String nomeProduto) {
+		try {
+			jmsTemplate.convertAndSend(fila,nomeProduto);
+			return nomeProduto;
+		}
+		catch(Exception e) {
+			return null;
+		}
+		
 	}
 	
 	@PostMapping("/autenticar")
