@@ -54,14 +54,10 @@ public class HomeController {
 	}
 	
 	@PostMapping("/buscarNovosProdutos")
-	public String buscarNovosProdutos(@RequestParam String nomeProduto) {
-		try {
-			jmsTemplate.convertAndSend(fila,nomeProduto);
-			return nomeProduto;
-		}
-		catch(Exception e) {
-			return null;
-		}
+	public String buscarNovosProdutos(@RequestBody String nomeProduto) {
+		System.out.println("Chegou aqui");
+		jmsTemplate.convertAndSend(fila,nomeProduto);
+		return nomeProduto;
 		
 	}
 	
@@ -72,6 +68,26 @@ public class HomeController {
 				.findByLoginAndSenha(usuario.getLogin(),usuario.getSenha());
 		usuario_ = code.codeManager(usuario_, true);
 		return usuario_;
+	}
+	
+	@PostMapping("/criarBase")
+	public List<Base> criarBase(@RequestBody List<Base> base){
+		return baseRepository.saveAll(base);
+	}
+	
+	@PostMapping("/deletarProdutos")
+	public void deletarProdutos() {
+		produtoRespository.deleteAll();
+	}
+	
+	@GetMapping("/verBase")
+	public List<Base> verBase(){
+		return baseRepository.findAll();
+	}
+	
+	@PostMapping("/deletarBase")
+	public void deletarBase() {
+		baseRepository.deleteAll();
 	}
 	
 	@PostMapping("/cadastrar")
